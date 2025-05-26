@@ -58,6 +58,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(EventMessage::class);
     }
 
+    public function entries()
+    {
+        return $this->hasMany(Guest::class, 'user_id');
+    }
+
     /**
      * The attributes that should be cast.
      *
