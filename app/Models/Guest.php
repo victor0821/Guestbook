@@ -13,5 +13,10 @@ class Guest extends Model
     protected $connection = 'mongodb';
     protected $collection = 'guest_entries';
     
-    protected $fillable = ['name', 'email', 'message'];
+    protected $fillable = ['name', 'email', 'message', 'user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

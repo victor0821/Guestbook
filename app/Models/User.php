@@ -2,15 +2,23 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+//use Jenssegers\Mongodb\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    
+    use Authenticatable, Authorizable, HasApiTokens;
+
+    protected $connection = 'mongodb';
+    protected $collection = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +29,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'avatar'
     ];
 
     /**
@@ -32,6 +42,21 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(EventMessage::class);
+    }
 
     /**
      * The attributes that should be cast.
