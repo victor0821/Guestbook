@@ -27,6 +27,16 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="password" class="form-label">Nueva Contraseña (dejar en blanco para no cambiar)</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password-confirm" class="form-label">Confirmar Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="password-confirm" name="password_confirmation">
+                        </div>
+
+                        <div class="mb-3">
                             <label for="role" class="form-label">Rol</label>
                             <select class="form-select" id="role" name="role" required>
                                 <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>Usuario</option>
@@ -35,13 +45,14 @@
                         </div>
 
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="active" name="active" 
-                                   {{ $user->active ? 'checked' : '' }}>
+                            <input type="hidden" name="active" value="0"> <!-- Campo oculto con valor por defecto -->
+                            <input type="checkbox" class="form-check-input" id="active" name="active" value="1"
+                                {{ $user->active ? 'checked' : '' }}>
                             <label class="form-check-label" for="active">Usuario Activo</label>
                         </div>
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{{ route('admin.users') }}" class="btn btn-secondary me-md-2">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </a>
                             <button type="submit" class="btn btn-primary">

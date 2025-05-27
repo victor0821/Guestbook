@@ -15,6 +15,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -24,6 +25,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
+
+            //Redirección basada en el rol
+            //if (Auth::user()->isAdmin()) {
+            //    return redirect()->route('admin.dashboard'); // Redirige a admin dashboard
+            //}
+
             return redirect()->intended('/');
         }
 

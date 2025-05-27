@@ -150,7 +150,7 @@
 
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">© 2023 Guestbook App. Todos los derechos reservados.</p>
+            <p class="mb-0">© 2025 Guestbook App. Todos los derechos reservados por el trio mas perron de la universidad :D.</p>
         </div>
     </footer>
 

@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="event-date">
-                    {{ $event->start_date->format('d M') }}
+                    {{ $event->start_date ? $event->start_date->format('d M') : 'Fecha no definida' }}
                 </div>
             </div>
         </div>

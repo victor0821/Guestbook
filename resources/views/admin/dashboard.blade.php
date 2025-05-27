@@ -36,8 +36,8 @@
             <h5 class="mb-0">Acciones Rápidas</h5>
         </div>
         <div class="card-body">
-            <div class="d-flex gap-3">
-                <a href="{{ route('admin.users') }}" class="btn btn-primary">
+            <div class="d-flex gap-3"><!--admin.dashboard admin.users.index-->
+                <a href="{{ route('admin.users.index') }}" class="btn btn-primary">
                     <i class="bi bi-people"></i> Gestionar Usuarios
                 </a>
             </div>

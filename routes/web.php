@@ -41,9 +41,24 @@ Route::middleware('auth')->group(function () {
 
 // Panel de administración
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    //tener en cuenta los controladores que hay que eliminar
+
+    /*Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
-    Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+    Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');*/
+    
+
+
+    //nuevas rutas de admin
+    Route::resource('users', AdminController::class)->except(['show']);
+    
+    Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/create', [AdminController::class, 'create'])->name('admin.users.create');
+    Route::post('/users', [AdminController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
 });
