@@ -1,43 +1,36 @@
-# Imagen base oficial con PHP 8.3, Apache y extensiones comunes
 FROM php:8.3-apache
 
-# Establecer el directorio de trabajo
 WORKDIR /var/www/html
 
-# Instalar dependencias necesarias del sistema
+# Instalar dependencias
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    zip \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    libpq-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libmcrypt-dev \
-    libcurl4-openssl-dev \
-    && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath gd
+    git unzip zip curl \
+    libpng-dev libonig-dev libxml2-dev libzip-dev \
+    libjpeg-dev libfreetype6-dev \
+    && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath gd \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb
 
-# Habilitar módulos de Apache necesarios
+# Configurar Apache
 RUN a2enmod rewrite
+COPY .htaccess /var/www/html/.htaccess
 
-# Instalar Composer (gestor de dependencias PHP)
+# Copiar archivos
+COPY . /var/www/html/
+
+# Permisos (ESTA ES LA PARTE CLAVE)
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
+
+# Configurar document root (IMPORTANTE)
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Instalar Composer y dependencias
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer install --no-dev --optimize-autoloader
 
-# Copiar todos los archivos del proyecto
-COPY . .
-
-# Dar permisos a carpetas necesarias
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Establecer permisos para Laravel
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Puerto en el que Apache corre dentro del contenedor
 EXPOSE 80
-
-# Comando por defecto al iniciar el contenedor
 CMD ["apache2-foreground"]
